@@ -1,0 +1,41 @@
+%title: Image Enhancement with the Application of Local and Global Enhancement Methods for Dark Images
+%input: low light image
+%output:enhanced image
+
+clc;
+close all;
+clear all;
+%read a image
+img_rgb = imread('C:\Users\DG LAB\Desktop\football.jpg');
+%show imput image
+imshow(img_rgb);
+%rgb to hsv conversion
+img_hsv=rgb2hsv(img_rgb);
+%assign slices of hsv image to different variables
+hsv_h=img_hsv(:,:,1);
+hsv_s=img_hsv(:,:,2);
+hsv_v=img_hsv(:,:,3);
+figure;
+imshow(hsv_v);
+%blur the image
+ hsv_v_new = padarray(hsv_v,[2 2]);
+blurred_img=integralFilter(integralImage(hsv_v_new),integralKernel([1 1 5 5],1/25));
+figure;
+imshow(blurred_img);
+%subtract blurred image from original image
+img1=hsv_v - blurred_img;
+%sharpening image
+local_img=hsv_v +5* img1;
+figure;
+imshow(local_img);
+%global:histogram equalization
+global_img = adapthisteq(local_img);
+figure;
+imshow(global_img);
+enhanced_image(:,:,1)=hsv_h;
+enhanced_image(:,:,2)=hsv_s;
+enhanced_image(:,:,3)=global_img;
+rgb_enhanced_image=hsv2rgb(enhanced_image);
+figure;
+imshow(rgb_enhanced_image);
+
